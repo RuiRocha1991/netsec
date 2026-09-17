@@ -182,7 +182,8 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 ### Python
 - `from __future__ import annotations` em todos os ficheiros
 - Type hints completos — mypy strict
-- `ruff check src/` antes de cada commit
+- Usar sempre `X | None` em vez de `Optional[X]` — Python 3.10+ com `from __future__ import annotations`
+- `ruff check src/` antes de cada commit (e `ruff check src/ --fix` para auto-corrigir)
 - Sem comentários óbvios — só WHY quando não é evidente
 - Dataclasses para modelos de dados
 - Nomes em inglês no código, comentários/docs em português
