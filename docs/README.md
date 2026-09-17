@@ -1,95 +1,60 @@
 # NetGuard AI — Documentação do projecto
 
-> Ficheiro principal. Ler antes de iniciar qualquer sessão de trabalho.
-> Para retomar numa sessão nova: abrir o ficheiro do dia actual e copiar o bloco de prompt.
+> Ficheiro principal de navegação. O contexto completo está em `CLAUDE.md` na raiz.
+> Este ficheiro serve apenas para navegar rapidamente para o dia em curso.
 
 ---
 
-## Contexto rápido
+## Estado actual
+
+**Fase 1 · Semana 1 · Dia 7 — próximo**
 
 | Item | Valor |
 |---|---|
-| Projecto | Sistema de segurança de redes com IA para PMEs |
-| Dev | Backend Java 7 anos → a mudar para Python + NetSec |
-| VM Ubuntu | `192.168.0.43` · alias `netsec-vm` · pasta `~/projects/netsec` |
-| Python | `3.12.4` via pyenv · venv em `~/projects/netsec/.venv` |
-| Estado actual | Fase 1 · Semana 1 · Dia 6 em curso |
-
----
-
-## Arquitectura de rede alvo
-
-```
-Internet
-    │
-[pfSense — Topton N100 4x 2.5GbE]
-    ├── GREEN  192.168.10.0/24  LAN privada (PCs, portáteis)
-    ├── IOT    192.168.40.0/24  câmeras, sensores — sem acesso externo
-    └── DMZ    192.168.30.0/24  sites públicos — só 80/443
-```
-
-**VMs VirtualBox:**
-
-| VM | SO | RAM | Quando |
-|---|---|---|---|
-| VM 1 | Ubuntu Server 24.04 | 2GB | Fase 1 — activa |
-| VM 2 | pfSense CE | 2GB | Fase 2 |
-| VM 3 | Kali Linux | 4GB | Fase 3 |
-
----
-
-## Stack
-
-Python 3.12 · FastAPI · SQLite → PostgreSQL · Pandas · scikit-learn · Scapy · pyshark · Anthropic API · LangChain · LangGraph · ChromaDB · Grafana · InfluxDB · Telegram Bot · weasyprint · Docker (Fase 4)
+| VM Ubuntu | `192.168.0.43` · alias `netsec-vm` |
+| Projecto | `~/projects/netsec` |
+| Activar venv | `source .venv/bin/activate` |
+| Testes | `python -m pytest tests/ -v` → 64 passed |
 
 ---
 
 ## Roadmap
 
-| Fase | Meses | Foco | Ficheiro |
+| Fase | Meses | Foco | Contexto |
 |---|---|---|---|
-| **1** | 1–3 | Python + redes + agente base | `fase1/` |
-| **2** | 4–6 | pfSense + lab RED/GREEN/DMZ | `fase2/` |
-| **3** | 7–12 | Pentesting + relatórios | `fase3/` |
-| **4** | 13–18 | Produto + IA + clientes | `fase4/` |
+| **1** | 1–3 | Python + redes + agente base | [`fase1/fase1.md`](fase1/fase1.md) |
+| **2** | 4–6 | pfSense + lab RED/GREEN/DMZ | [`fase2/fase2.md`](fase2/fase2.md) |
+| **3** | 7–12 | Pentesting + relatórios | [`fase3/fase3.md`](fase3/fase3.md) |
+| **4** | 13–18 | Produto + IA + clientes | [`fase4/fase4.md`](fase4/fase4.md) |
 
 ---
 
-## Estrutura de docs
+## Fase 1 — dias
 
 ```
-docs/
-├── README.md                  ← este ficheiro
-├── fase1/
-│   └── semana1/
-│       ├── dia1.md            ✅ concluído
-│       ├── dia2.md            ✅ concluído
-│       ├── dia3.md            ✅ concluído
-│       ├── dia4.md            ✅ concluído
-│       ├── dia5.md            ✅ concluído
-│       ├── dia6.md            🔄 em curso
-│       └── dia7.md            ⬜ próximo
-├── fase2/
-├── fase3/
-└── fase4/
+docs/fase1/
+├── fase1.md                   ← contexto completo da fase
+└── semana1/
+    ├── dia1.md  ✅  Configuração do ambiente
+    ├── dia2.md  ✅  Python core (tipos, comprehensions, walrus)
+    ├── dia3.md  ✅  Wireshark + tshark + pyshark
+    ├── dia4.md  ✅  Funções de rede (NetworkZone, DANGEROUS_PORTS)
+    ├── dia5.md  ✅  LogEntry dataclass
+    └── dia6.md  ✅  Parser pfSense filterlog
 ```
 
-Cada `diaX.md` tem:
-- **Prompt de contexto** — copiar para chat novo, carrega tudo em poucos tokens
-- Steps completos com comandos
-- Output esperado
-- Checklist
-- Resumo do que foi feito e alterado
+**Próximo:** Dia 7 — pipeline completo: ficheiro log → SQLite
 
 ---
 
-## Hardware
+## Como retomar
 
-**Por cliente:** Topton N100 4x 2.5GbE (~180€) + TP-Link TL-SG3210XHP-M2 PoE+ (~300€) = ~480€
-**Lab pessoal:** Topton N100 (~160€) + TP-Link TL-SG108E (~40€) = ~200€
+1. Verificar que tudo passa: `python -m pytest tests/ -v`
+2. Abrir `docs/fase1/semana1/diaN.md` para o dia em curso
+3. Copiar o bloco "Prompt de contexto" se precisar de iniciar sessão nova
 
----
-
-## Certificações
-
-Network+ (Fase 2) → eJPT (Fase 3) → CEH (após eJPT) → OSCP (opcional)
+**Verificação rápida:**
+```bash
+cd ~/projects/netsec && source .venv/bin/activate
+python -m pytest tests/ -v && ruff check src/ && echo "✓ tudo ok"
+```
