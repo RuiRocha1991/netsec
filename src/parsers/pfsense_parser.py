@@ -1,7 +1,7 @@
 from __future__ import annotations
+
 import re
 from datetime import datetime
-from typing import Optional
 
 from src.models.log_entry import LogEntry
 
@@ -25,7 +25,7 @@ _IDX_SRC_PORT   = 20
 _IDX_DST_PORT   = 21
 
 
-def parse_line(line: str, year: int | None = None) -> Optional[LogEntry]:
+def parse_line(line: str, year: int | None = None) -> LogEntry | None:
     """Converte uma linha syslog pfSense filterlog num LogEntry.
 
     Devolve None se a linha não for filterlog ou estiver malformada.
@@ -62,7 +62,7 @@ def parse_file(path: str, year: int | None = None) -> list[LogEntry]:
 
 # ── Helpers privados ───────────────────────────────────────────────────────
 
-def _parse_csv(fields: list[str], timestamp: datetime) -> Optional[LogEntry]:
+def _parse_csv(fields: list[str], timestamp: datetime) -> LogEntry | None:
     try:
         ip_ver = fields[_IDX_IP_VER]
         if ip_ver != "4":
