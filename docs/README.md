@@ -34,13 +34,22 @@
 ```
 docs/fase1/
 ├── fase1.md                   ← contexto completo da fase
-└── semana1/
-    ├── dia1.md  ✅  Configuração do ambiente
-    ├── dia2.md  ✅  Python core (tipos, comprehensions, walrus)
-    ├── dia3.md  ✅  Wireshark + tshark + pyshark
-    ├── dia4.md  ✅  Funções de rede (NetworkZone, DANGEROUS_PORTS)
-    ├── dia5.md  ✅  LogEntry dataclass
-    └── dia6.md  ✅  Parser pfSense filterlog
+├── semana1/
+│   ├── dia1.md  ✅  Configuração do ambiente
+│   ├── dia2.md  ✅  Python core (tipos, comprehensions, walrus)
+│   ├── dia3.md  ✅  Wireshark + tshark + pyshark
+│   ├── dia4.md  ✅  Funções de rede (NetworkZone, DANGEROUS_PORTS)
+│   ├── dia5.md  ✅  LogEntry dataclass
+│   ├── dia6.md  ✅  Parser pfSense filterlog
+│   └── dia7.md  ⬜  Pipeline completo: ficheiro log → SQLite
+└── semana2/
+    ├── dia8.md  ⬜  Suporte IPv6 + regex avançado
+    ├── dia9.md  ⬜  Servidor syslog UDP com threading
+    ├── dia10.md ⬜  Queries SQLite avançadas + Pandas
+    ├── dia11.md ⬜  Motor de regras YAML
+    ├── dia12.md ⬜  AbuseIPDB threat intel com cache
+    ├── dia13.md ⬜  GeoIP MaxMind GeoLite2 offline
+    └── dia14.md ⬜  Pipeline completo + revisão Semana 2
 ```
 
 **Próximo:** Dia 7 — pipeline completo: ficheiro log → SQLite
