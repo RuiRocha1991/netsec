@@ -24,6 +24,7 @@ _ZONE_MAP: list[tuple[str, NetworkZone]] = [
 
 # Portos considerados perigosos em contexto de firewall
 DANGEROUS_PORTS: frozenset[int] = frozenset({
+    22,    # SSH — alvo frequente de brute force
     23,    # Telnet — texto limpo
     3389,  # RDP — alvo frequente de brute force
     445,   # SMB — ransomware

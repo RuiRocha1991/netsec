@@ -13,7 +13,7 @@
 | Dev | Backend Java 7 anos → a mudar para Python + NetSec |
 | VM Ubuntu | `192.168.0.43` · alias `netsec-vm` · pasta `~/projects/netsec` |
 | Python | `3.12.4` via pyenv · venv em `~/projects/netsec/.venv` |
-| Estado actual | Fase 1 · Semana 1 · Dia 5 concluído |
+| Estado actual | Fase 1 · Semana 1 · Dia 6 em curso |
 
 ---
 
@@ -67,7 +67,8 @@ docs/
 │       ├── dia3.md            ✅ concluído
 │       ├── dia4.md            ✅ concluído
 │       ├── dia5.md            ✅ concluído
-│       └── dia6.md            ⬜ próximo
+│       ├── dia6.md            🔄 em curso
+│       └── dia7.md            ⬜ próximo
 ├── fase2/
 ├── fase3/
 └── fase4/

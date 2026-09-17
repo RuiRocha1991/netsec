@@ -58,7 +58,7 @@ class TestIsDangerousPort:
     def test_dangerous_ports(self, port: int) -> None:
         assert is_dangerous_port(port) is True
 
-    @pytest.mark.parametrize("port", [80, 443, 22, 8080, 53])
+    @pytest.mark.parametrize("port", [80, 443, 8080, 53])
     def test_safe_ports(self, port: int) -> None:
         assert is_dangerous_port(port) is False
 
@@ -77,7 +77,7 @@ class TestClassifyEvent:
         assert "lateral" in result
 
     def test_low_blocked_external(self) -> None:
-        result = classify_event("1.2.3.4", "192.168.0.43", 22, "block")
+        result = classify_event("1.2.3.4", "192.168.0.43", 8080, "block")
         assert result.startswith("LOW")
 
     def test_info_pass_traffic(self) -> None:
