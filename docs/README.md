@@ -74,14 +74,14 @@ docs/fase1/
 │   ├── dia33.md ⬜  Perfil de baseline IoT
 │   ├── dia34.md ⬜  Detecção de desvio ao baseline IoT
 │   └── dia35.md ⬜  Revisão Semana 5
-├── semana6/
+├── semana6/  (planos escritos)
 │   ├── dia36.md ⬜  Feature engineering
 │   ├── dia37.md ⬜  Janelas temporais e agregações por IP
 │   ├── dia38.md ⬜  Isolation Forest — primeiro modelo
 │   ├── dia39.md ⬜  Treino e avaliação do modelo
 │   ├── dia40.md ⬜  Persistência do modelo (joblib)
 │   ├── dia41.md ⬜  Integração do scoring ML no pipeline
-│   └── dia42.md ⬜  Revisão Semana 6
+│   └── dia42.md ⬜  Revisão Semana 6 — unificação de schema
 ├── semana7/
 │   ├── dia43.md ⬜  weasyprint — fundamentos HTML→PDF
 │   ├── dia44.md ⬜  Template do relatório semanal (Jinja2)
