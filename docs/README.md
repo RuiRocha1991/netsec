@@ -106,7 +106,7 @@ docs/fase1/
 │   ├── dia61.md ⬜  RAG chain para análise enriquecida
 │   ├── dia62.md ⬜  Avaliação da qualidade do retrieval
 │   └── dia63.md ⬜  Revisão Semana 9
-├── semana10/
+├── semana10/  (planos escritos)
 │   ├── dia64.md ⬜  LangGraph — StateGraph, nodes e edges
 │   ├── dia65.md ⬜  Tools: consultar BD e AbuseIPDB
 │   ├── dia66.md ⬜  Tool: consultar RAG
