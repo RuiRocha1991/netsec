@@ -82,7 +82,7 @@ docs/fase1/
 │   ├── dia40.md ⬜  Persistência do modelo (joblib)
 │   ├── dia41.md ⬜  Integração do scoring ML no pipeline
 │   └── dia42.md ⬜  Revisão Semana 6 — unificação de schema
-├── semana7/
+├── semana7/  (planos escritos)
 │   ├── dia43.md ⬜  weasyprint — fundamentos HTML→PDF
 │   ├── dia44.md ⬜  Template do relatório semanal (Jinja2)
 │   ├── dia45.md ⬜  Gráficos no relatório PDF
