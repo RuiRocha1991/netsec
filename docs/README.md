@@ -98,7 +98,7 @@ docs/fase1/
 │   ├── dia54.md ⬜  Gestão de custo e tokens
 │   ├── dia55.md ⬜  Cache de respostas LLM
 │   └── dia56.md ⬜  Revisão Semana 8
-├── semana9/
+├── semana9/  (planos escritos)
 │   ├── dia57.md ⬜  LangChain — conceitos e chains básicas
 │   ├── dia58.md ⬜  ChromaDB — setup e embeddings
 │   ├── dia59.md ⬜  Ingestão do MITRE ATT&CK
