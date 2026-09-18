@@ -27,12 +27,18 @@ Construir o agente base do NetGuard AI em Python — um sistema que recebe logs 
 
 | Semana | Foco | Entregável |
 |---|---|---|
-| 1–2 | Python core + modelo de dados | `network_utils.py`, `LogEntry` dataclass |
-| 3–4 | Parsing pfSense + syslog | `pflog_parser.py`, syslog UDP server |
-| 5–6 | FastAPI + threat intel + Grafana | API REST, dashboard, alertas Telegram |
-| 7–8 | Pandas + ML anomaly detection | Isolation Forest, relatório PDF |
-| 9–10 | LLM + análise de alertas | Anthropic SDK, análise em português |
-| 11–12 | RAG + agente LangGraph | ChromaDB, agente autónomo, entrega final |
+| 1 | Python core + modelo de dados | `network_utils.py`, `LogEntry` dataclass, parser pfSense |
+| 2 | Persistência + enriquecimento | SQLite, syslog UDP, motor de regras YAML, AbuseIPDB, GeoIP |
+| 3 | API REST + alertas | FastAPI, Pydantic schemas, webhook, auth, Telegram |
+| 4 | Séries temporais + dashboard | InfluxDB, Grafana provisionado, painéis em tempo real |
+| 5 | Análise de tráfego avançada | Pandas (heatmaps, top talkers), Scapy, baseline IoT |
+| 6 | Machine Learning | Feature engineering, Isolation Forest, scoring em tempo real |
+| 7 | Relatórios + qualidade | weasyprint PDF semanal, refactor, mypy strict, checkpoint Fase 1 v1 |
+| 8 | LLM — análise em português | Anthropic SDK, prompt design, structured output, cache |
+| 9 | RAG | LangChain, ChromaDB, ingestão MITRE ATT&CK + OWASP |
+| 10 | Agente autónomo | LangGraph, tool use, human-in-the-loop |
+| 11 | Containerização + CI/CD | Docker, docker-compose local, GitHub Actions |
+| 12 | Entrega da Fase 1 | Documentação, guião de demo, hardening, tag `fase1-v1` |
 
 ---
 
@@ -59,23 +65,43 @@ Construir o agente base do NetGuard AI em Python — um sistema que recebe logs 
 | 6 | Parser pfSense filterlog | ✅ | src/parsers/pfsense_parser.py + tests/test_pfsense_parser.py |
 | 7 | Pipeline completo: ficheiro log → SQLite | ⬜ próximo | — |
 
-### SEMANAS 2–12
+### SEMANA 2 — Persistência + enriquecimento (concluída — planos escritos)
 
-A desenvolver à medida que avança.
+| Dia | Tema |
+|---|---|
+| 8 | Suporte IPv6 + regex avançado |
+| 9 | Servidor syslog UDP (threading + queue) |
+| 10 | Queries SQLite avançadas + Pandas |
+| 11 | Motor de regras YAML |
+| 12 | AbuseIPDB — threat intelligence |
+| 13 | GeoIP com MaxMind GeoLite2 |
+| 14 | Pipeline completo + revisão da Semana 2 |
+
+### SEMANA 3 — API REST + alertas (planos escritos)
+
+| Dia | Tema |
+|---|---|
+| 15 | FastAPI base — GET /health, /events, /stats |
+| 16 | Pydantic models e validação de inputs |
+| 17 | Paginação, filtros e ordenação nos endpoints |
+| 18 | Alertas Telegram Bot em tempo real |
+| 19 | Webhook pfSense → FastAPI (`IngestPipeline` partilhado) |
+| 20 | Autenticação API key nos endpoints |
+| 21 | Testes e2e com httpx/uvicorn + revisão Semana 3 |
+
+### SEMANAS 4–12 — planos previstos
 
 | Semana | Dias | Conteúdo previsto |
 |---|---|---|
-| **Sem 2** | 8–14 | Regex avançado + syslog UDP server + SQLite persistence |
-| **Sem 3** | 15–21 | FastAPI + AbuseIPDB + GeoIP + alertas Telegram |
-| **Sem 4** | 22–28 | Docker + Grafana + InfluxDB + relatório PDF |
-| **Sem 5** | 29–35 | Pandas + análise de tráfego + motor de regras YAML |
-| **Sem 6** | 36–42 | Scapy + perfis IoT + heatmap de ataques |
-| **Sem 7** | 43–49 | ML: Isolation Forest + feature engineering |
-| **Sem 8** | 50–56 | Testes + refactoring + entrega Fase 1 v1 |
-| **Sem 9** | 57–63 | Anthropic SDK + análise de alertas em português |
-| **Sem 10** | 64–70 | LangChain + RAG sobre MITRE e OWASP |
-| **Sem 11** | 71–77 | LangGraph + agente autónomo + tool use |
-| **Sem 12** | 78–84 | Produto final + instalação + entrega Fase 1 |
+| **Sem 4** | 22–28 | InfluxDB + Grafana provisionado — dashboards em tempo real |
+| **Sem 5** | 29–35 | Pandas avançado (heatmaps, top talkers) + Scapy + baseline IoT |
+| **Sem 6** | 36–42 | Feature engineering + Isolation Forest (ML anomaly detection) |
+| **Sem 7** | 43–49 | weasyprint PDF semanal + refactor + mypy strict + checkpoint Fase 1 v1 |
+| **Sem 8** | 50–56 | Anthropic SDK — análise de alertas em português, structured output |
+| **Sem 9** | 57–63 | LangChain + ChromaDB — RAG sobre MITRE ATT&CK e OWASP Top 10 |
+| **Sem 10** | 64–70 | LangGraph — agente autónomo, tool use, human-in-the-loop |
+| **Sem 11** | 71–77 | Docker + docker-compose local + CI/CD com GitHub Actions |
+| **Sem 12** | 78–84 | Documentação, guião de demo, hardening, tag `fase1-v1` |
 
 ---
 
