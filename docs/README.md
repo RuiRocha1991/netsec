@@ -90,7 +90,7 @@ docs/fase1/
 │   ├── dia47.md ⬜  Refactoring e consolidação de módulos
 │   ├── dia48.md ⬜  mypy --strict limpo + cobertura de testes
 │   └── dia49.md ⬜  Checkpoint "Fase 1 v1" — demo end-to-end
-├── semana8/
+├── semana8/  (planos escritos)
 │   ├── dia50.md ⬜  Anthropic SDK — setup e primeira chamada
 │   ├── dia51.md ⬜  Prompt design para análise em português
 │   ├── dia52.md ⬜  Structured output com Pydantic
