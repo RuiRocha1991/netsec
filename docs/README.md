@@ -58,12 +58,12 @@ docs/fase1/
 │   ├── dia19.md ⬜  Webhook pfSense → FastAPI (IngestPipeline)
 │   ├── dia20.md ⬜  Autenticação API key
 │   └── dia21.md ⬜  Testes e2e httpx/uvicorn + revisão Semana 3
-├── semana4/
+├── semana4/  (planos escritos)
 │   ├── dia22.md ⬜  InfluxDB — conceitos e client Python
 │   ├── dia23.md ⬜  Escrever métricas no InfluxDB
 │   ├── dia24.md ⬜  Grafana — instalação e primeiro dashboard
 │   ├── dia25.md ⬜  Provisioning Grafana como código
-│   ├── dia26.md ⬜  Painéis: eventos/min, top IPs, zonas, alertas
+│   ├── dia26.md ⬜  Painéis: top IPs, zonas, alertas HIGH
 │   ├── dia27.md ⬜  Alertas Grafana + testes InfluxDB writer
 │   └── dia28.md ⬜  Revisão Semana 4 — dashboard completo
 ├── semana5/
