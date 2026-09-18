@@ -66,7 +66,7 @@ docs/fase1/
 │   ├── dia26.md ⬜  Painéis: top IPs, zonas, alertas HIGH
 │   ├── dia27.md ⬜  Alertas Grafana + testes InfluxDB writer
 │   └── dia28.md ⬜  Revisão Semana 4 — dashboard completo
-├── semana5/
+├── semana5/  (planos escritos)
 │   ├── dia29.md ⬜  Agregações temporais avançadas (Pandas)
 │   ├── dia30.md ⬜  Heatmap de ataques por hora/dia
 │   ├── dia31.md ⬜  Top talkers e baseline de tráfego
