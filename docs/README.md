@@ -122,7 +122,7 @@ docs/fase1/
 │   ├── dia75.md ⬜  CI — GitHub Actions: testes automáticos
 │   ├── dia76.md ⬜  CI — lint + mypy + build da imagem
 │   └── dia77.md ⬜  Revisão Semana 11
-└── semana12/
+└── semana12/  (planos escritos — Fase 1 completa, dias 1-84 todos planeados)
     ├── dia78.md ⬜  Checklist de entrega final
     ├── dia79.md ⬜  Documentação técnica e arquitectura
     ├── dia80.md ⬜  Guião de demo para clientes
@@ -131,6 +131,8 @@ docs/fase1/
     ├── dia83.md ⬜  Revisão final de segurança do agente
     └── dia84.md ⬜  Fecho da Fase 1 — tag `fase1-v1`
 ```
+
+**Nota importante:** os planos de lição dos dias 7-84 estão todos escritos, mas a EXECUÇÃO real (código em `src/`, testes a passar) ainda só chega ao Dia 6 — ver "Estado actual" no topo deste ficheiro e em `CLAUDE.md`. ⬜ aqui significa "plano pronto, por executar", não "por planear".
 
 **Próximo:** Dia 7 — pipeline completo: ficheiro log → SQLite
 
