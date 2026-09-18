@@ -114,7 +114,7 @@ docs/fase1/
 │   ├── dia68.md ⬜  Human-in-the-loop
 │   ├── dia69.md ⬜  Memória do agente e logging de decisões
 │   └── dia70.md ⬜  Revisão Semana 10
-├── semana11/
+├── semana11/  (planos escritos)
 │   ├── dia71.md ⬜  Dockerfile do agente
 │   ├── dia72.md ⬜  docker-compose local
 │   ├── dia73.md ⬜  Variáveis de ambiente e secrets em Docker
