@@ -133,13 +133,17 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 │   │   └── pfsense_parser.py  ← parse_line(), parse_file() — formato filterlog
 │   ├── analyzers/             ← vazio (Semana 2+)
 │   ├── alerts/                ← vazio (Semana 3+)
-│   └── db/                    ← vazio (Semana 2+)
+│   └── db/
+│       └── storage.py         ← EventStorage (SQLite): insert_many(), stats(), top_blocked_ips()
 ├── tests/
 │   ├── test_network_utils.py  ← 29 testes
 │   ├── test_log_entry.py      ← 17 testes
-│   └── test_pfsense_parser.py ← 18 testes
+│   ├── test_pfsense_parser.py ← 18 testes
+│   └── test_storage.py        ← 7 testes
 ├── scripts/
-│   └── analyze_pcap.py        ← análise .pcap com pyshark
+│   ├── analyze_pcap.py        ← análise .pcap com pyshark
+│   ├── generate_test_log.py   ← gera log pfSense sintético
+│   └── ingest_log.py          ← pipeline log → SQLite + sumário
 ├── data/
 │   └── captures/              ← ficheiros .pcap (não vão para git)
 └── docs/
@@ -154,7 +158,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 
 ## Estado actual
 
-**Fase 1 · Semana 1 — em curso**
+**Fase 1 · Semana 2 — em curso**
 
 | Dia | Tema | Estado |
 |---|---|---|
@@ -164,11 +168,12 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 4 | Funções de rede + DANGEROUS_PORTS + classify_event() | ✅ |
 | Dia 5 | LogEntry dataclass + propriedades + serialização | ✅ |
 | Dia 6 | Parser pfSense filterlog (parse_line, parse_file) | ✅ |
-| Dia 7 | Pipeline completo: ficheiro de log → SQLite | ⬜ próximo |
+| Dia 7 | Pipeline completo: ficheiro de log → SQLite | ✅ |
+| Dia 8 | Suporte IPv6 + regex avançado | ⬜ próximo |
 
 **Packages instalados:** `ruff mypy pytest pytest-asyncio pyshark`
 
-**Testes:** 64 testes, todos a passar (`python -m pytest tests/ -v`)
+**Testes:** 71 testes, todos a passar (`python -m pytest tests/ -v`)
 
 ---
 

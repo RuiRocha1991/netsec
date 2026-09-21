@@ -1,6 +1,6 @@
 # Dia 7 — Pipeline completo: ficheiro de log → SQLite
 
-**Fase:** 1 · **Semana:** 1 · **Estado:** ⬜ Por fazer
+**Fase:** 1 · **Semana:** 1 · **Estado:** ✅ Concluído
 
 ---
 

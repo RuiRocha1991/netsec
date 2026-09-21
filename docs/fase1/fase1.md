@@ -194,14 +194,13 @@ Sep 17 10:30:45 pfsense filterlog[12345]: 5,,,0,em0,match,block,in,4,0x0,,64,123
 
 ---
 
-## Próximo: Dia 7
+## Próximo: Dia 8
 
-**Tema:** Pipeline completo — ler ficheiro de log pfSense e persistir em SQLite
+**Tema:** Suporte IPv6 + regex avançado
 
 **O que construir:**
-- Gerador de logs de teste (fixtures realistas com vários protocolos e IPs)
-- `src/db/storage.py` — criar tabela `events`, inserir `LogEntry`, queries básicas
-- `scripts/ingest_log.py` — script que lê ficheiro `.log`, parseia, persiste, imprime sumário
-- Testes para o módulo de storage
+- Suporte básico IPv6 no `pfsense_parser.py` (índices CSV diferentes do IPv4)
+- Regex avançado — grupos não-capturantes, alternância, flags
+- Testes para linhas IPv6
 
-**Conceitos Python novos:** `sqlite3`, context managers (`with`), `pathlib.Path`
+**Conceitos Python novos:** `re` avançado, módulo `ipaddress` para IPv6

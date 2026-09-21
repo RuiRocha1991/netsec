@@ -7,14 +7,14 @@
 
 ## Estado actual
 
-**Fase 1 · Semana 1 · Dia 7 — próximo**
+**Fase 1 · Semana 2 · Dia 8 — próximo**
 
 | Item | Valor |
 |---|---|
 | VM Ubuntu | `192.168.0.43` · alias `netsec-vm` |
 | Projecto | `~/projects/netsec` |
 | Activar venv | `source .venv/bin/activate` |
-| Testes | `python -m pytest tests/ -v` → 64 passed |
+| Testes | `python -m pytest tests/ -v` → 71 passed |
 
 ---
 
@@ -41,7 +41,7 @@ docs/fase1/
 │   ├── dia4.md  ✅  Funções de rede (NetworkZone, DANGEROUS_PORTS)
 │   ├── dia5.md  ✅  LogEntry dataclass
 │   ├── dia6.md  ✅  Parser pfSense filterlog
-│   └── dia7.md  ⬜  Pipeline completo: ficheiro log → SQLite
+│   └── dia7.md  ✅  Pipeline completo: ficheiro log → SQLite
 ├── semana2/
 │   ├── dia8.md  ⬜  Suporte IPv6 + regex avançado
 │   ├── dia9.md  ⬜  Servidor syslog UDP com threading
@@ -134,7 +134,7 @@ docs/fase1/
 
 **Nota importante:** os planos de lição dos dias 7-84 estão todos escritos, mas a EXECUÇÃO real (código em `src/`, testes a passar) ainda só chega ao Dia 6 — ver "Estado actual" no topo deste ficheiro e em `CLAUDE.md`. ⬜ aqui significa "plano pronto, por executar", não "por planear".
 
-**Próximo:** Dia 7 — pipeline completo: ficheiro log → SQLite
+**Próximo:** Dia 8 — suporte IPv6 + regex avançado
 
 ---
 
