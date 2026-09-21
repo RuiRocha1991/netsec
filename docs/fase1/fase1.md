@@ -189,18 +189,18 @@ Sep 17 10:30:45 pfsense filterlog[12345]: 5,,,0,em0,match,block,in,4,0x0,,64,123
 | Porta 22 em `DANGEROUS_PORTS` | SSH é alvo frequente de brute force — levantava HIGH priority correctamente |
 | `LogEntry` como `@dataclass` | `__post_init__` calcula campos derivados automaticamente |
 | `classify_event()` retorna string prefixada | `is_high_priority` usa `startswith("HIGH")` — simples, sem enums extra |
-| IPv6 retorna `None` no parser | Deixado para Dia 8 — não crashar em linhas IPv6 |
+| Parser IPv6 com índices próprios (`_V6_*`) | Layout real do filterlog IPv6 difere do IPv4 — resolvido no Dia 8 |
 | `errors="replace"` no `parse_file()` | Logs podem ter bytes inválidos — robustez sem crashar |
 
 ---
 
-## Próximo: Dia 8
+## Próximo: Dia 9
 
-**Tema:** Suporte IPv6 + regex avançado
+**Tema:** Servidor syslog UDP com threading
 
 **O que construir:**
-- Suporte básico IPv6 no `pfsense_parser.py` (índices CSV diferentes do IPv4)
-- Regex avançado — grupos não-capturantes, alternância, flags
-- Testes para linhas IPv6
+- `SyslogServer` que escuta na porta 5514 (>1024, sem root)
+- Cada datagrama → `parse_line()` → `storage.insert()` → alerta se `is_high_priority`
+- Cliente UDP de teste que envia linhas de `data/logs/test_pfsense.log`
 
-**Conceitos Python novos:** `re` avançado, módulo `ipaddress` para IPv6
+**Conceitos Python novos:** `socket` UDP, `threading`

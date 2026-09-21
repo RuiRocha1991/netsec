@@ -1,6 +1,6 @@
 # Dia 8 — Suporte IPv6 + regex avançado
 
-**Fase:** 1 · **Semana:** 2 · **Estado:** ⬜ Por fazer
+**Fase:** 1 · **Semana:** 2 · **Estado:** ✅ Concluído
 
 ---
 

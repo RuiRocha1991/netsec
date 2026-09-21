@@ -130,7 +130,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 │   │   ├── log_entry.py       ← dataclass LogEntry (modelo central de eventos)
 │   │   └── python_core.py     ← exemplos de Python core (aprendizagem)
 │   ├── parsers/
-│   │   └── pfsense_parser.py  ← parse_line(), parse_file() — formato filterlog
+│   │   └── pfsense_parser.py  ← parse_line(), parse_file() — filterlog IPv4 + IPv6
 │   ├── analyzers/             ← vazio (Semana 2+)
 │   ├── alerts/                ← vazio (Semana 3+)
 │   └── db/
@@ -138,11 +138,12 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 ├── tests/
 │   ├── test_network_utils.py  ← 29 testes
 │   ├── test_log_entry.py      ← 17 testes
-│   ├── test_pfsense_parser.py ← 18 testes
+│   ├── test_pfsense_parser.py ← 23 testes
 │   └── test_storage.py        ← 7 testes
 ├── scripts/
 │   ├── analyze_pcap.py        ← análise .pcap com pyshark
 │   ├── generate_test_log.py   ← gera log pfSense sintético
+│   ├── regex_lab.py           ← exercícios de regex avançado
 │   └── ingest_log.py          ← pipeline log → SQLite + sumário
 ├── data/
 │   └── captures/              ← ficheiros .pcap (não vão para git)
@@ -169,11 +170,12 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 5 | LogEntry dataclass + propriedades + serialização | ✅ |
 | Dia 6 | Parser pfSense filterlog (parse_line, parse_file) | ✅ |
 | Dia 7 | Pipeline completo: ficheiro de log → SQLite | ✅ |
-| Dia 8 | Suporte IPv6 + regex avançado | ⬜ próximo |
+| Dia 8 | Suporte IPv6 + regex avançado | ✅ |
+| Dia 9 | Servidor syslog UDP com threading | ⬜ próximo |
 
 **Packages instalados:** `ruff mypy pytest pytest-asyncio pyshark`
 
-**Testes:** 71 testes, todos a passar (`python -m pytest tests/ -v`)
+**Testes:** 76 testes, todos a passar (`python -m pytest tests/ -v`)
 
 ---
 
@@ -207,7 +209,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Porta 22 (SSH) em `DANGEROUS_PORTS` | Alvo frequente de brute force — levantava HIGH priority correctamente |
 | `LogEntry` como dataclass com `__post_init__` | Campos calculados (zona, is_dangerous, classification) automáticos na criação |
 | `classify_event()` devolve string prefixada (HIGH/MEDIUM/LOW/INFO) | `is_high_priority` usa `startswith("HIGH")` — simples e extensível |
-| IPv6 retorna `None` no parser | Ignorado para Dia 6 — tratado no Dia 8 |
+| Parser IPv6 com índices próprios (`_V6_*`) | Layout real do filterlog IPv6: `class,flow,hoplimit,proto,proto_id,len,src,dst,sport,dport` — não é o do IPv4 |
 | `parse_file()` usa `errors="replace"` | Logs podem ter caracteres inválidos — não crashar |
 | `EventStorage` abre uma ligação SQLite por operação (`@contextmanager` com commit/rollback) | Simples e seguro; sem estado partilhado entre chamadas |
 | `ingest_log.py` não deduplica | Correr duas vezes o mesmo log duplica eventos — a tratar quando houver ingestão contínua (syslog, Dia 9) |
