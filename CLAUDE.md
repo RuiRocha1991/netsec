@@ -148,7 +148,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 │   └── captures/              ← ficheiros .pcap (não vão para git)
 └── docs/
     ├── README.md              ← índice e estado actual
-    ├── fase1/                 ← fase1.md + semana1/ com dia1..dia6
+    ├── fase1/                 ← fase1.md + semana1/ com dia1..dia7
     ├── fase2/                 ← fase2.md
     ├── fase3/                 ← fase3.md
     └── fase4/                 ← fase4.md
@@ -182,7 +182,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 ### Git
 - Um commit por dia no mínimo
 - Mensagens: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`
-- Branch por dia/tema: `netset-N`
+- Branch por dia/tema: `netsec-N`
 
 ### Python
 - `from __future__ import annotations` em todos os ficheiros
@@ -209,6 +209,9 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | `classify_event()` devolve string prefixada (HIGH/MEDIUM/LOW/INFO) | `is_high_priority` usa `startswith("HIGH")` — simples e extensível |
 | IPv6 retorna `None` no parser | Ignorado para Dia 6 — tratado no Dia 8 |
 | `parse_file()` usa `errors="replace"` | Logs podem ter caracteres inválidos — não crashar |
+| `EventStorage` abre uma ligação SQLite por operação (`@contextmanager` com commit/rollback) | Simples e seguro; sem estado partilhado entre chamadas |
+| `ingest_log.py` não deduplica | Correr duas vezes o mesmo log duplica eventos — a tratar quando houver ingestão contínua (syslog, Dia 9) |
+| `*.db` e `data/logs/*.log` no `.gitignore` | Dados gerados localmente não vão para git |
 
 ---
 
