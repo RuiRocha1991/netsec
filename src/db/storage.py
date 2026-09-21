@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Generator
 
 from src.models.log_entry import LogEntry
 
@@ -112,7 +112,7 @@ class EventStorage:
     def count(self) -> int:
         with self._conn() as conn:
             row = conn.execute("SELECT COUNT(*) FROM events").fetchone()
-            return row[0]
+            return int(row[0])
 
     def recent(self, limit: int = 20) -> list[sqlite3.Row]:
         """Devolve os últimos N eventos, mais recente primeiro."""
@@ -137,7 +137,9 @@ class EventStorage:
         """Estatísticas gerais da base de dados."""
         with self._conn() as conn:
             total     = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
-            blocked   = conn.execute("SELECT COUNT(*) FROM events WHERE action='block'").fetchone()[0]
+            blocked   = conn.execute(
+                "SELECT COUNT(*) FROM events WHERE action='block'"
+            ).fetchone()[0]
             high_prio = conn.execute(
                 "SELECT COUNT(*) FROM events WHERE classification LIKE 'HIGH%'"
             ).fetchone()[0]
