@@ -5,38 +5,44 @@ from datetime import datetime
 
 from src.models.log_entry import LogEntry
 
-# ── Regex para cabeçalho syslog ────────────────────────────────────────────
-# Exemplo: "Sep 17 10:30:45 pfsense filterlog[12345]: <csv>"
 _SYSLOG_RE = re.compile(
     r"^(?P<month>\w{3})\s+(?P<day>\d{1,2})\s+(?P<time>\d{2}:\d{2}:\d{2})"
     r"\s+\S+\s+filterlog\[\d+\]:\s+(?P<csv>.+)$"
 )
 
-# ── Índices dos campos CSV comuns (IPv4) ───────────────────────────────────
-_IDX_INTERFACE  = 4
-_IDX_ACTION     = 6   # "block" | "pass"
-_IDX_DIRECTION  = 7   # "in" | "out"
-_IDX_IP_VER     = 8   # "4" | "6"
-_IDX_PROTO      = 16  # "tcp" | "udp" | "icmp"
-_IDX_SRC_IP     = 18
-_IDX_DST_IP     = 19
-# portos apenas existem em TCP/UDP (índices 20 e 21)
-_IDX_SRC_PORT   = 20
-_IDX_DST_PORT   = 21
+# ── Índices IPv4 ───────────────────────────────────────────────────────────
+_V4_INTERFACE = 4
+_V4_ACTION    = 6
+_V4_IP_VER    = 8
+_V4_PROTO     = 16
+_V4_SRC_IP    = 18
+_V4_DST_IP    = 19
+_V4_SRC_PORT  = 20
+_V4_DST_PORT  = 21
+
+# ── Índices IPv6 ───────────────────────────────────────────────────────────
+_V6_INTERFACE = 4
+_V6_ACTION    = 6
+_V6_IP_VER    = 8
+_V6_PROTO     = 12
+_V6_SRC_IP    = 15
+_V6_DST_IP    = 16
+_V6_SRC_PORT  = 17
+_V6_DST_PORT  = 18
+
+# Dispatch: ip_ver → função de parsing
+_PARSERS = {
+    "4": "_parse_ipv4",  # ver implementação abaixo
+    "6": "_parse_ipv6",
+}
 
 
 def parse_line(line: str, year: int | None = None) -> LogEntry | None:
-    """Converte uma linha syslog pfSense filterlog num LogEntry.
-
-    Devolve None se a linha não for filterlog ou estiver malformada.
-    """
     m = _SYSLOG_RE.match(line.strip())
     if not m:
         return None
-
     if year is None:
         year = datetime.now().year
-
     try:
         timestamp = datetime.strptime(
             f"{m.group('month')} {m.group('day'):>2} {m.group('time')} {year}",
@@ -46,11 +52,19 @@ def parse_line(line: str, year: int | None = None) -> LogEntry | None:
         return None
 
     fields = m.group("csv").split(",")
-    return _parse_csv(fields, timestamp)
+    try:
+        ip_ver = fields[_V4_IP_VER]
+    except IndexError:
+        return None
+
+    if ip_ver == "4":
+        return _parse_ipv4(fields, timestamp)
+    if ip_ver == "6":
+        return _parse_ipv6(fields, timestamp)
+    return None
 
 
 def parse_file(path: str, year: int | None = None) -> list[LogEntry]:
-    """Lê um ficheiro de log linha a linha e devolve os LogEntry válidos."""
     entries: list[LogEntry] = []
     with open(path, encoding="utf-8", errors="replace") as fh:
         for line in fh:
@@ -60,39 +74,44 @@ def parse_file(path: str, year: int | None = None) -> list[LogEntry]:
     return entries
 
 
-# ── Helpers privados ───────────────────────────────────────────────────────
+def _extract_ports(fields: list[str], src_idx: int, dst_idx: int,
+                   protocol: str) -> tuple[int, int]:
+    if protocol in ("tcp", "udp"):
+        return int(fields[src_idx]), int(fields[dst_idx])
+    return 0, 0
 
-def _parse_csv(fields: list[str], timestamp: datetime) -> LogEntry | None:
+
+def _parse_ipv4(fields: list[str], timestamp: datetime) -> LogEntry | None:
     try:
-        ip_ver = fields[_IDX_IP_VER]
-        if ip_ver != "4":
-            return None  # IPv6 fica para dia 8
-
-        interface = fields[_IDX_INTERFACE]
-        action    = fields[_IDX_ACTION]
-        protocol  = fields[_IDX_PROTO].lower()
-
-        src_ip = fields[_IDX_SRC_IP]
-        dst_ip = fields[_IDX_DST_IP]
-
-        src_port, dst_port = _extract_ports(fields, protocol)
-
+        proto = fields[_V4_PROTO].lower()
+        src_port, dst_port = _extract_ports(fields, _V4_SRC_PORT, _V4_DST_PORT, proto)
         return LogEntry(
             timestamp=timestamp,
-            action=action,
-            interface=interface,
-            protocol=protocol,
-            src_ip=src_ip,
+            action=fields[_V4_ACTION],
+            interface=fields[_V4_INTERFACE],
+            protocol=proto,
+            src_ip=fields[_V4_SRC_IP],
             src_port=src_port,
-            dst_ip=dst_ip,
+            dst_ip=fields[_V4_DST_IP],
             dst_port=dst_port,
         )
     except (IndexError, ValueError):
         return None
 
 
-def _extract_ports(fields: list[str], protocol: str) -> tuple[int, int]:
-    """Devolve (src_port, dst_port). ICMP e outros protocolos usam 0."""
-    if protocol in ("tcp", "udp"):
-        return int(fields[_IDX_SRC_PORT]), int(fields[_IDX_DST_PORT])
-    return 0, 0
+def _parse_ipv6(fields: list[str], timestamp: datetime) -> LogEntry | None:
+    try:
+        proto = fields[_V6_PROTO].lower()
+        src_port, dst_port = _extract_ports(fields, _V6_SRC_PORT, _V6_DST_PORT, proto)
+        return LogEntry(
+            timestamp=timestamp,
+            action=fields[_V6_ACTION],
+            interface=fields[_V6_INTERFACE],
+            protocol=proto,
+            src_ip=fields[_V6_SRC_IP],
+            src_port=src_port,
+            dst_ip=fields[_V6_DST_IP],
+            dst_port=dst_port,
+        )
+    except (IndexError, ValueError):
+        return None

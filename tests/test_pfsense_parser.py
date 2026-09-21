@@ -95,3 +95,27 @@ class TestParseLineIntegration:
     def test_is_high_priority_for_external_block(self):
         entry = parse_line(_TCP_BLOCK, year=2026)
         assert entry.is_high_priority is True
+
+
+_IPV6_BLOCK = (
+    "Sep 17 14:00:00 pfsense filterlog[1]: "
+    "5,,,0,em0,match,block,in,6,0x00,0x12345,64,tcp,6,60,"
+    "2001:db8::1,2001:db8::50,54321,22,0,S,1,,64240,,mss,1460"
+)
+
+class TestParseLineIPv6:
+    def test_ipv6_returns_entry(self):
+        entry = parse_line(_IPV6_BLOCK, year=2026)
+        assert isinstance(entry, LogEntry)
+
+    def test_ipv6_action(self):
+        assert parse_line(_IPV6_BLOCK, year=2026).action == "block"
+
+    def test_ipv6_protocol(self):
+        assert parse_line(_IPV6_BLOCK, year=2026).protocol == "tcp"
+
+    def test_ipv6_src_ip(self):
+        assert parse_line(_IPV6_BLOCK, year=2026).src_ip == "2001:db8::1"
+
+    def test_ipv6_dst_port(self):
+        assert parse_line(_IPV6_BLOCK, year=2026).dst_port == 22
