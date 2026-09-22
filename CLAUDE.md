@@ -171,11 +171,12 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 6 | Parser pfSense filterlog (parse_line, parse_file) | ✅ |
 | Dia 7 | Pipeline completo: ficheiro de log → SQLite | ✅ |
 | Dia 8 | Suporte IPv6 + regex avançado | ✅ |
-| Dia 9 | Servidor syslog UDP com threading | ⬜ próximo |
+| Dia 9 | Servidor syslog UDP com threading | ✅ |
+| Dia 10 | Queries SQLite avançadas + Pandas | ⬜ próximo |
 
 **Packages instalados:** `ruff mypy pytest pytest-asyncio pyshark`
 
-**Testes:** 76 testes, todos a passar (`python -m pytest tests/ -v`)
+**Testes:** 79 testes, todos a passar (`python -m pytest tests/ -v`)
 
 ---
 

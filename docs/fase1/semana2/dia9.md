@@ -1,6 +1,6 @@
 # Dia 9 — Servidor syslog UDP
 
-**Fase:** 1 · **Semana:** 2 · **Estado:** ⬜ Por fazer
+**Fase:** 1 · **Semana:** 2 · **Estado:** ✅ Concluído
 
 ---
 
@@ -348,7 +348,7 @@ No pfSense: **Status → System Logs → Settings → Remote Logging**
 
 ```bash
 python -m pytest tests/ -v
-# 78 + 3 = 81 testes
+# 79 passed
 
 ruff check src/
 git add src/parsers/syslog_server.py scripts/run_syslog_server.py \
@@ -360,21 +360,19 @@ git commit -m "feat: dia 9 — servidor syslog UDP com threading e queue"
 
 ## Checklist
 
-- [ ] `SyslogServer` implementado com `socketserver.UDPServer`
-- [ ] Handler deposita na `Queue`, worker processa — threads separadas
-- [ ] `scripts/run_syslog_server.py` arranca e aguarda Ctrl+C
-- [ ] `scripts/send_test_syslog.py` envia o ficheiro de teste
-- [ ] Alertas HIGH aparecem no Terminal 1 em tempo real
-- [ ] `server.storage.count()` confirma eventos persistidos
-- [ ] 3 testes de integração a passar
-- [ ] `python -m pytest tests/ -v` → 81 passed
-- [ ] Git commit realizado
+- [x] `SyslogServer` implementado com `socketserver.UDPServer`
+- [x] Handler deposita na `Queue`, worker processa — threads separadas
+- [x] `scripts/run_syslog_server.py` arranca e aguarda Ctrl+C
+- [x] `scripts/send_test_syslog.py` envia o ficheiro de teste
+- [x] Alertas HIGH aparecem no Terminal 1 em tempo real
+- [x] `server.storage.count()` confirma eventos persistidos
+- [x] 3 testes de integração a passar
+- [x] `python -m pytest tests/ -v` → 79 passed
+- [x] Git commit realizado (`ecfa2bb`)
 
 ---
 
 ## Resumo — alterações feitas
-
-*(preencher após conclusão)*
 
 **Ficheiros criados:**
 

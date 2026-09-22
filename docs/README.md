@@ -7,14 +7,14 @@
 
 ## Estado actual
 
-**Fase 1 · Semana 2 · Dia 9 — próximo**
+**Fase 1 · Semana 2 · Dia 10 — próximo**
 
 | Item | Valor |
 |---|---|
 | VM Ubuntu | `192.168.0.43` · alias `netsec-vm` |
 | Projecto | `~/projects/netsec` |
 | Activar venv | `source .venv/bin/activate` |
-| Testes | `python -m pytest tests/ -v` → 76 passed |
+| Testes | `python -m pytest tests/ -v` → 79 passed |
 
 ---
 
@@ -44,7 +44,7 @@ docs/fase1/
 │   └── dia7.md  ✅  Pipeline completo: ficheiro log → SQLite
 ├── semana2/
 │   ├── dia8.md  ✅  Suporte IPv6 + regex avançado
-│   ├── dia9.md  ⬜  Servidor syslog UDP com threading
+│   ├── dia9.md  ✅  Servidor syslog UDP com threading
 │   ├── dia10.md ⬜  Queries SQLite avançadas + Pandas
 │   ├── dia11.md ⬜  Motor de regras YAML
 │   ├── dia12.md ⬜  AbuseIPDB threat intel com cache
@@ -132,9 +132,9 @@ docs/fase1/
     └── dia84.md ⬜  Fecho da Fase 1 — tag `fase1-v1`
 ```
 
-**Nota importante:** os planos de lição dos dias 7-84 estão todos escritos, mas a EXECUÇÃO real (código em `src/`, testes a passar) ainda só chega ao Dia 6 — ver "Estado actual" no topo deste ficheiro e em `CLAUDE.md`. ⬜ aqui significa "plano pronto, por executar", não "por planear".
+**Nota importante:** os planos de lição dos dias 7-84 estão todos escritos, mas a EXECUÇÃO real (código em `src/`, testes a passar) ainda só chega ao Dia 9 — ver "Estado actual" no topo deste ficheiro e em `CLAUDE.md`. ⬜ aqui significa "plano pronto, por executar", não "por planear".
 
-**Próximo:** Dia 9 — servidor syslog UDP com threading
+**Próximo:** Dia 10 — queries SQLite avançadas e estatísticas com Pandas
 
 ---
 
