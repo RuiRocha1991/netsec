@@ -11,6 +11,8 @@ dev = [
     "pytest",
     "pytest-asyncio",
 ]
+analysis = ["pandas"]
+capture = ["pyshark"]
 
 [tool.ruff]
 line-length = 100

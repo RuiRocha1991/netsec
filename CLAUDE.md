@@ -174,7 +174,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 9 | Servidor syslog UDP com threading | ✅ |
 | Dia 10 | Queries SQLite avançadas + Pandas | ⬜ próximo |
 
-**Packages instalados:** `ruff mypy pytest pytest-asyncio pyshark`
+**Packages instalados:** `pip install -e ".[dev,analysis,capture]"` — dev: `ruff mypy pytest pytest-asyncio` · analysis: `pandas` · capture: `pyshark`
 
 **Testes:** 79 testes, todos a passar (`python -m pytest tests/ -v`)
 
