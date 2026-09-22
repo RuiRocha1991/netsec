@@ -4,8 +4,12 @@ import sqlite3
 from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from src.models.log_entry import LogEntry
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 _DEFAULT_DB = Path("data/netsec.db")
 
@@ -144,3 +148,64 @@ class EventStorage:
                 "SELECT COUNT(*) FROM events WHERE classification LIKE 'HIGH%'"
             ).fetchone()[0]
         return {"total": total, "blocked": blocked, "high_priority": high_prio}
+
+    def events_by_hour(self) -> list[sqlite3.Row]:
+        """Contagem de bloqueios agrupada por hora do dia."""
+        with self._conn() as conn:
+            return conn.execute("""
+                SELECT
+                    strftime('%H', timestamp) AS hour,
+                    COUNT(*) AS total,
+                    SUM(CASE WHEN action='block' THEN 1 ELSE 0 END) AS blocked
+                FROM events
+                GROUP BY hour
+                ORDER BY hour
+            """).fetchall()
+
+    def top_targeted_ports(self, limit: int = 10) -> list[sqlite3.Row]:
+        """Portos destino mais atacados (apenas bloqueios externos)."""
+        with self._conn() as conn:
+            return conn.execute("""
+                SELECT dst_port, COUNT(*) AS total
+                FROM events
+                WHERE action = 'block'
+                  AND src_zone = 'EXTERNAL'
+                  AND dst_port > 0
+                GROUP BY dst_port
+                ORDER BY total DESC
+                LIMIT ?
+            """, (limit,)).fetchall()
+
+    def protocol_breakdown(self) -> list[sqlite3.Row]:
+        """Distribuição de protocolos — contagem por protocolo e acção."""
+        with self._conn() as conn:
+            return conn.execute("""
+                SELECT protocol, action, COUNT(*) AS total
+                FROM events
+                GROUP BY protocol, action
+                ORDER BY total DESC
+            """).fetchall()
+
+    def potential_port_scans(self, threshold: int = 10) -> list[sqlite3.Row]:
+        """IPs que tentaram mais de N portos distintos — indício de port scan."""
+        with self._conn() as conn:
+            return conn.execute("""
+                SELECT src_ip, COUNT(DISTINCT dst_port) AS unique_ports, COUNT(*) AS total
+                FROM events
+                WHERE action = 'block'
+                  AND src_zone = 'EXTERNAL'
+                GROUP BY src_ip
+                HAVING unique_ports >= ?
+                ORDER BY unique_ports DESC
+            """, (threshold,)).fetchall()
+
+    def as_dataframe(self) -> pd.DataFrame:
+        """Carrega todos os eventos num DataFrame Pandas."""
+        import pandas as pd
+
+        with self._conn() as conn:
+            return pd.read_sql(
+                "SELECT * FROM events ORDER BY timestamp",
+                conn,
+                parse_dates=["timestamp"],
+            )

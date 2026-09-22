@@ -69,3 +69,40 @@ class TestQueries:
         s = storage.stats()
         assert s["total"] == 2
         assert s["blocked"] == 1
+
+class TestAnalyticsQueries:
+    def test_top_targeted_ports(self, storage: EventStorage) -> None:
+        storage.insert(_make_entry(dst_port=22))
+        storage.insert(_make_entry(dst_port=22))
+        storage.insert(_make_entry(dst_port=3389))
+        rows = storage.top_targeted_ports(5)
+        assert rows[0]["dst_port"] == 22
+        assert rows[0]["total"] == 2
+
+    def test_protocol_breakdown(self, storage: EventStorage) -> None:
+        storage.insert(_make_entry())
+        rows = storage.protocol_breakdown()
+        assert len(rows) >= 1
+        assert rows[0]["protocol"] == "tcp"
+
+    def test_potential_port_scans_detected(self, storage: EventStorage) -> None:
+        # mesmo IP, 6 portos distintos
+        for port in [22, 23, 80, 443, 3389, 8080]:
+            storage.insert(_make_entry(dst_port=port))
+        scans = storage.potential_port_scans(threshold=5)
+        assert len(scans) == 1
+        assert scans[0]["unique_ports"] == 6
+
+    def test_potential_port_scans_below_threshold(self, storage: EventStorage) -> None:
+        for port in [22, 23]:
+            storage.insert(_make_entry(dst_port=port))
+        scans = storage.potential_port_scans(threshold=5)
+        assert len(scans) == 0
+
+    def test_as_dataframe(self, storage: EventStorage) -> None:
+        import pandas as pd
+        storage.insert(_make_entry())
+        df = storage.as_dataframe()
+        assert isinstance(df, pd.DataFrame)
+        assert len(df) == 1
+        assert "src_ip" in df.columns
