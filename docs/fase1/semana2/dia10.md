@@ -1,6 +1,6 @@
 # Dia 10 — Queries SQLite avançadas + Pandas
 
-**Fase:** 1 · **Semana:** 2 · **Estado:** ⬜ Por fazer
+**Fase:** 1 · **Semana:** 2 · **Estado:** ✅ Concluído
 
 ---
 
@@ -297,20 +297,18 @@ git commit -m "feat: dia 10 — queries analíticas SQLite e análise Pandas"
 
 ## Checklist
 
-- [ ] Pandas instalado e em `pyproject.toml`
-- [ ] 4 métodos novos em `EventStorage`: `events_by_hour`, `top_targeted_ports`, `protocol_breakdown`, `potential_port_scans`
-- [ ] `as_dataframe()` carrega eventos em DataFrame
-- [ ] `scripts/analyze_logs.py` corre e mostra output com tabelas e barras
-- [ ] Port scans detectados no ficheiro de teste
-- [ ] 5 testes novos a passar
-- [ ] `python -m pytest tests/ -v` → 86 passed
-- [ ] Git commit realizado
+- [x] Pandas instalado e em `pyproject.toml`
+- [x] 4 métodos novos em `EventStorage`: `events_by_hour`, `top_targeted_ports`, `protocol_breakdown`, `potential_port_scans`
+- [x] `as_dataframe()` carrega eventos em DataFrame
+- [x] `scripts/analyze_logs.py` corre e mostra output com tabelas e barras
+- [x] Port scans detectados no ficheiro de teste
+- [x] 5 testes novos a passar
+- [x] `python -m pytest tests/ -v` → 84 passed
+- [x] Git commit realizado
 
 ---
 
 ## Resumo — alterações feitas
-
-*(preencher após conclusão)*
 
 **Ficheiros alterados/criados:**
 

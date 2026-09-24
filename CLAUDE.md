@@ -172,11 +172,12 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 7 | Pipeline completo: ficheiro de log → SQLite | ✅ |
 | Dia 8 | Suporte IPv6 + regex avançado | ✅ |
 | Dia 9 | Servidor syslog UDP com threading | ✅ |
-| Dia 10 | Queries SQLite avançadas + Pandas | ⬜ próximo |
+| Dia 10 | Queries SQLite avançadas + Pandas | ✅ |
+| Dia 11 | Motor de regras YAML configurável | ⬜ próximo |
 
-**Packages instalados:** `pip install -e ".[dev,analysis,capture]"` — dev: `ruff mypy pytest pytest-asyncio` · analysis: `pandas` · capture: `pyshark`
+**Packages instalados:** `pip install -e ".[dev,analysis,capture]"` — dev: `ruff mypy pytest pytest-asyncio` · analysis: `pandas pyyaml` · capture: `pyshark`
 
-**Testes:** 79 testes, todos a passar (`python -m pytest tests/ -v`)
+**Testes:** 84 testes, todos a passar (`python -m pytest tests/ -v`)
 
 ---
 
