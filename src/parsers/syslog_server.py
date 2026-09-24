@@ -7,6 +7,7 @@ from pathlib import Path
 from queue import Queue
 from typing import cast
 
+from src.analyzers.rule_engine import RuleEngine
 from src.db.storage import EventStorage
 from src.models.log_entry import LogEntry
 from src.parsers.pfsense_parser import parse_line
@@ -49,6 +50,7 @@ class SyslogServer:
         self.host = host
         self.port = port
         self.storage = EventStorage(Path(db_path))
+        self.engine = RuleEngine()
         self._queue: Queue[str | None] = Queue(maxsize=10_000)
         self._server: _SyslogUDPServer | None = None
         self._worker_thread: threading.Thread | None = None
@@ -103,11 +105,17 @@ class SyslogServer:
             finally:
                 self._queue.task_done()
 
+    _SEVERITY_COLOR = {
+        "CRITICAL": "\033[1;31m",  # bold red
+        "HIGH":     "\033[0;31m",  # red
+        "MEDIUM":   "\033[0;33m",  # yellow
+        "LOW":      "\033[0;36m",  # cyan
+    }
+    _RESET = "\033[0m"
+
     def _maybe_alert(self, entry: LogEntry) -> None:
-        if entry.is_high_priority:
-            print(
-                f"[ALERTA] {entry.timestamp:%H:%M:%S} "
-                f"{entry.action.upper()} {entry.src_ip}:{entry.src_port} "
-                f"→ {entry.dst_ip}:{entry.dst_port} ({entry.protocol}) "
-                f"| {entry.classification}"
-            )
+        matches = self.engine.evaluate(entry)
+        for match in matches:
+            if match.rule.alert:
+                color = self._SEVERITY_COLOR.get(match.rule.severity, "")
+                print(f"{color}{match}{self._RESET}")

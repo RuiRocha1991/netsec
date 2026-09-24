@@ -1,6 +1,6 @@
 # Dia 11 — Motor de regras YAML
 
-**Fase:** 1 · **Semana:** 2 · **Estado:** ⬜ Por fazer
+**Fase:** 1 · **Semana:** 2 · **Estado:** ✅ Concluído
 
 ---
 
@@ -356,21 +356,19 @@ git commit -m "feat: dia 11 — motor de regras YAML configurável"
 
 ## Checklist
 
-- [ ] PyYAML instalado e em `pyproject.toml`
-- [ ] `data/rules.yaml` com 6 regras definidas
-- [ ] `RuleEngine` implementado — carrega YAML, avalia LogEntry
-- [ ] `RuleMatch` como dataclass frozen com `__str__` útil
-- [ ] 8 testes a passar
-- [ ] `python -m pytest tests/ -v` → 94 passed
-- [ ] `SyslogServer._maybe_alert` actualizado para usar o motor de regras
-- [ ] Consegues adicionar uma regra nova ao YAML sem tocar em Python
-- [ ] Git commit realizado
+- [x] PyYAML instalado e em `pyproject.toml`
+- [x] `data/rules.yaml` com 6 regras definidas
+- [x] `RuleEngine` implementado — carrega YAML, avalia LogEntry
+- [x] `RuleMatch` como dataclass frozen com `__str__` útil
+- [x] 8 testes a passar
+- [x] `python -m pytest tests/ -v` → 92 passed
+- [x] `SyslogServer._maybe_alert` actualizado para usar o motor de regras
+- [x] Consegues adicionar uma regra nova ao YAML sem tocar em Python
+- [x] Git commit realizado
 
 ---
 
 ## Resumo — alterações feitas
-
-*(preencher após conclusão)*
 
 **Ficheiros criados:**
 
