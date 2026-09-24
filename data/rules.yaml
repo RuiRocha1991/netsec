@@ -1,0 +1,56 @@
+# Motor de regras NetGuard AI
+# Cada regra avalia um LogEntry e pode gerar um alerta.
+
+rules:
+
+  - name: ssh_brute_force
+    description: "Tentativa SSH de IP externo"
+    severity: HIGH
+    alert: true
+    conditions:
+      action: block
+      src_zone: EXTERNAL
+      dst_port: 22
+
+  - name: rdp_external
+    description: "Tentativa RDP (3389) de IP externo"
+    severity: HIGH
+    alert: true
+    conditions:
+      action: block
+      src_zone: EXTERNAL
+      dst_port: 3389
+
+  - name: smb_external
+    description: "Tentativa SMB (445) de IP externo — possível ransomware"
+    severity: CRITICAL
+    alert: true
+    conditions:
+      action: block
+      src_zone: EXTERNAL
+      dst_port: 445
+
+  - name: iot_lateral_movement
+    description: "Dispositivo IoT a tentar aceder à rede GREEN"
+    severity: HIGH
+    alert: true
+    conditions:
+      action: block
+      src_zone: IOT
+      dst_zone: GREEN
+
+  - name: outbound_telnet
+    description: "Tráfego Telnet não encriptado saindo da rede"
+    severity: MEDIUM
+    alert: false
+    conditions:
+      action: pass
+      dst_port: 23
+
+  - name: dns_outbound
+    description: "Query DNS — monitorizar para tunneling"
+    severity: LOW
+    alert: false
+    conditions:
+      dst_port: 53
+      protocol: udp
