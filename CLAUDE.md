@@ -211,7 +211,7 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 9 | Servidor syslog UDP com threading | ✅ |
 | Dia 10 | Queries SQLite avançadas + Pandas | ✅ |
 | Dia 11 | Motor de regras YAML configurável | ✅ |
-| Dia 12 | AbuseIPDB — threat intelligence | ⬜ próximo |
+| Dia 12 | AbuseIPDB — threat intelligence | 🔄 em curso |
 
 **Packages instalados:** `pip install -e ".[dev,analysis,capture]"` — dev: `ruff mypy pytest pytest-asyncio` · analysis: `pandas pyyaml` · capture: `pyshark`
 
