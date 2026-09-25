@@ -2,17 +2,38 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+import dataclasses
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.db.storage import EventStorage  # noqa: E402
 from src.parsers.pfsense_parser import parse_file  # noqa: E402
 
+from src.analyzers.threat_intel import ThreatIntel  # noqa: E402
+from src.models.log_entry import LogEntry  # noqa: E402
+from src.models.network_utils import NetworkZone  # noqa: E402
+
+
 
 def ingest(log_path: Path, db_path: Path) -> None:
+    intel = ThreatIntel()
     print(f"A ler {log_path}...")
     entries = parse_file(str(log_path))
     print(f"  {len(entries)} linhas válidas encontradas")
+
+    print("A enriquecer IPs externos com AbuseIPDB...")
+    enriched = 0
+    result: list[LogEntry] = []
+    for entry in entries:
+        if entry.src_zone == NetworkZone.EXTERNAL:
+            score, country = intel.check_ip(entry.src_ip)
+            # LogEntry é dataclass — replace() cria cópia com campos alterados
+            entry = dataclasses.replace(entry, abuse_score=score, geo_country=country)
+            enriched += 1
+        result.append(entry)
+    entries = result
+
+    print(f"  {enriched} eventos de IPs externos enriquecidos")
 
     storage = EventStorage(db_path)
     inserted = storage.insert_many(entries)
