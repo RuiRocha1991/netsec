@@ -36,7 +36,7 @@ Ao criar um novo ficheiro de dia (ou de fase/semana), seguir a estrutura dos exi
 3. **Objectivo:** o problema que se resolve e **porquê** importa para o NetGuard AI (com exemplo curto)
 4. **Conceito / Como funciona:** explicar a tecnologia ou ideia por trás (rede, segurança, ML, API…) com analogias Java, trade-offs e limites — *antes* dos steps
 5. **Conceitos Python novos:** tabela `Conceito | Onde é usado`
-6. **Steps** numerados: comandos, código, testes e commit (mensagem `feat:` conforme convenções); nos conceitos novos, guiar com perguntas/pistas antes de mostrar a solução completa
+6. **Steps** numerados: comandos, **código completo pronto a usar** (formato híbrido escolhido pelo Rui), testes e commit (mensagem `feat:`); só em conceitos muito novos (protocolo, algoritmo de ML) guiar primeiro com perguntas/pistas e dar a solução a seguir
 7. **Onde inova:** onde este passo pode ser diferenciador face aos operadores telecom / soluções fechadas
 8. **Checklist** de verificação (incluindo "consegues explicar X por palavras tuas?")
 9. **Resumo:** ficheiros criados/alterados + o que foi aprendido + exercício ou pergunta de reflexão
