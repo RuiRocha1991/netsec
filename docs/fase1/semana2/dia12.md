@@ -1,6 +1,6 @@
 # Dia 12 — AbuseIPDB — threat intelligence
 
-**Fase:** 1 · **Semana:** 2 · **Estado:** ⬜ Por fazer
+**Fase:** 1 · **Semana:** 2 · **Estado:** ✅ Concluído
 
 ---
 
@@ -19,7 +19,7 @@ Dias 1-11 concluídos. Estado do projecto:
 - src/db/storage.py — EventStorage SQLite com queries analíticas
 - src/analyzers/rule_engine.py — RuleEngine YAML
 - data/rules.yaml — 6 regras configuradas
-- tests/: 94 testes, todos a passar
+- tests/: 92 testes, todos a passar
 - Packages: pyshark, pandas, pyyaml
 
 Quero continuar para o Dia 12: integração com AbuseIPDB para enriquecer IPs
@@ -37,6 +37,36 @@ Enriquecer `LogEntry.abuse_score` com dados reais da API AbuseIPDB:
 - Integrar no pipeline: ao parsear uma linha, enriquecer o IP de origem
 
 **AbuseIPDB free tier:** 1000 queries/dia · necessita registo em abuseipdb.com
+
+**Porque importa para o NetGuard AI:** até agora só sabemos *o que* aconteceu (um IP tentou SSH). Com reputação passamos a saber *quem* é: um IP com score 95 que já atacou milhares de sites merece alerta imediato; um IP com score 0 provavelmente é ruído. É o que separa "500 alertas por dia" de "3 alertas que interessam".
+
+---
+
+## Como funciona
+
+**Threat intelligence** = dados partilhados sobre IPs/domínios maliciosos. Milhares de sistemas (firewalls, honeypots, administradores) reportam ataques ao AbuseIPDB, que agrega os relatórios num `abuseConfidenceScore` de 0 a 100 (confiança de que o IP é abusivo, nos últimos `maxAgeInDays`).
+
+```
+LogEntry (src_ip externo) ──► ThreatIntel.check_ip()
+                                  │
+                        cache SQLite (TTL 24h)?
+                         ├── sim ─► devolve score guardado (0 chamadas à API)
+                         └── não ─► GET api.abuseipdb.com ─► guarda em cache ─► devolve
+```
+
+**Analogia Java:** a `ThreatIntel` é um *repository com cache* — como um `@Cacheable` do Spring à volta de um `RestTemplate`. A cache é feita à mão em SQLite porque queremos TTL e persistência entre execuções, e evita esgotar as 1000 queries/dia.
+
+**Porquê cache:** um scan de portas gera centenas de eventos do mesmo IP. Sem cache, 1 atacante esgotava a quota diária.
+
+**Trade-offs e limites (para pensar):**
+
+| Limite | Consequência | Mitigação |
+|---|---|---|
+| Score 0 quando a API falha | Ataque real pode parecer inofensivo (*fail-open*) | Guardar `None` (desconhecido) em vez de 0 — ver exercício |
+| IPs novos ainda sem reports | Score 0 não significa "seguro" | Combinar com regras e ML (Semana 6) |
+| Enviamos IPs do cliente a um terceiro | Implicação RGPD/privacidade | Só consultamos IPs **externos** (nunca IPs GREEN/IoT) |
+| Quota de 1000/dia | Não escala para muitos clientes | Cache partilhada no VPS central + plano pago |
+| Dependência de um único fornecedor | Se cair, ficamos cegos | Vários feeds (pfBlockerNG, listas Spamhaus/FireHOL) |
 
 ---
 
@@ -108,7 +138,7 @@ class ThreatIntel:
         api_key: str | None = None,
         cache_path: Path = _CACHE_DB,
     ) -> None:
-        self.api_key = api_key or os.getenv("ABUSEIPDB_API_KEY", "")
+        self.api_key = api_key if api_key is not None else os.getenv("ABUSEIPDB_API_KEY", "")
         self.cache_path = cache_path
         self.session = requests.Session()
         self.session.headers["Key"] = self.api_key
@@ -136,10 +166,10 @@ class ThreatIntel:
 
     def _get_cached(self, ip: str) -> sqlite3.Row | None:
         with self._cache_conn() as conn:
-            row = conn.execute(
+            row: sqlite3.Row | None = conn.execute(
                 "SELECT * FROM ip_cache WHERE ip = ?", (ip,)
             ).fetchone()
-        if row and (time.time() - row["queried_at"]) < _TTL_SECS:
+        if row is not None and (time.time() - row["queried_at"]) < _TTL_SECS:
             return row
         return None
 
@@ -198,21 +228,26 @@ from src.models.network_utils import NetworkZone
 # No início do ingest():
 intel = ThreatIntel()
 
+# No topo do ficheiro: import dataclasses
+
 # Antes do insert_many, enriquecer IPs externos:
 print("A enriquecer IPs externos com AbuseIPDB...")
 enriched = 0
+result: list[LogEntry] = []
 for entry in entries:
     if entry.src_zone == NetworkZone.EXTERNAL:
         score, country = intel.check_ip(entry.src_ip)
-        # LogEntry é dataclass — usar replace() para criar cópia com campos alterados
-        import dataclasses
-        entries[entries.index(entry)] = dataclasses.replace(
-            entry, abuse_score=score, geo_country=country
-        )
+        # LogEntry é dataclass — replace() cria cópia com campos alterados
+        entry = dataclasses.replace(entry, abuse_score=score, geo_country=country)
         enriched += 1
+    result.append(entry)
+entries = result
 
-print(f"  {enriched} IPs externos enriquecidos")
+print(f"  {enriched} eventos de IPs externos enriquecidos")
 ```
+
+> Construímos uma lista nova em vez de `entries[entries.index(entry)] = ...`: `index()` é O(n) por chamada (O(n²) no total) e, com eventos iguais, actualizaria sempre o primeiro. A cache SQLite garante que o mesmo IP só vai uma vez à API.
+> Não esquecer `from src.models.log_entry import LogEntry`.
 
 ---
 
@@ -303,7 +338,7 @@ print(f'Score: {score}/100  País: {country}')
 
 ```bash
 python -m pytest tests/ -v
-# 94 + 5 = 99 testes
+# 92 + 5 = 97 testes
 
 ruff check src/
 git add src/analyzers/threat_intel.py tests/test_threat_intel.py pyproject.toml
@@ -312,30 +347,52 @@ git commit -m "feat: dia 12 — AbuseIPDB threat intel com cache SQLite"
 
 ---
 
+## Onde inova
+
+Os operadores telecom vendem listas de bloqueio genéricas iguais para todos os clientes. No NetGuard AI o score não é só um número:
+
+- **Contexto ao LLM (Semana 8):** o alerta chega ao Claude com "IP com score 95, 1.2k reports, origem CN, tentou SSH na zona DMZ" e o relatório em português explica *porquê* é grave — não só *que* foi bloqueado.
+- **Feature para ML (Semana 6):** `abuse_score` entra no Isolation Forest como sinal adicional de anomalia.
+- **Cache partilhada multi-tenant:** no VPS central, um IP reportado num cliente protege todos os outros sem gastar quota extra — efeito de rede que uma caixa fechada por cliente não tem.
+
+---
+
 ## Checklist
 
-- [ ] `requests` e `python-dotenv` instalados
-- [ ] `.env` criado com `ABUSEIPDB_API_KEY` (não vai para git)
-- [ ] `ThreatIntel` implementado com cache SQLite (TTL 24h)
-- [ ] 5 testes com mocks a passar (sem consumir quota da API real)
-- [ ] `python -m pytest tests/ -v` → 99 passed
-- [ ] `ruff check src/` sem erros
+- [x] `requests` e `python-dotenv` instalados
+- [x] `.env` criado com `ABUSEIPDB_API_KEY` (não vai para git)
+- [x] `ThreatIntel` implementado com cache SQLite (TTL 24h)
+- [x] 5 testes com mocks a passar (sem consumir quota da API real)
+- [x] `python -m pytest tests/ -v` → 97 passed
+- [x] `ruff check src/` sem erros
 - [ ] (Opcional) Testado com API real — IP conhecido retorna score > 0
-- [ ] Git commit realizado
+- [x] Consegues explicar por palavras tuas porque é que a cache existe e o que acontece quando a API falha?
+- [x] Git commit realizado
 
 ---
 
 ## Resumo — alterações feitas
 
-*(preencher após conclusão)*
-
-**Ficheiros criados:**
+**Ficheiros criados/alterados:**
 
 | Ficheiro | Descrição |
 |---|---|
-| `src/analyzers/threat_intel.py` | ThreatIntel — AbuseIPDB + cache SQLite |
-| `tests/test_threat_intel.py` | 5 testes com mocks |
+| `src/analyzers/threat_intel.py` | `ThreatIntel` — AbuseIPDB com cache SQLite (TTL 24h) |
+| `tests/test_threat_intel.py` | 5 testes com mocks (sem consumir quota real) |
+| `scripts/ingest_log.py` | Pipeline enriquece IPs externos antes de inserir no SQLite |
+| `.env.example` | Template com `ABUSEIPDB_API_KEY` |
 
-**Packages:** `requests`, `python-dotenv`
+**Packages adicionados:** `requests`, `python-dotenv`
+
+**Testes:** 92 → **97 testes** (5 novos), todos a passar.
+
+**O que aprendeste:**
+- Threat intelligence: o que é um `abuseConfidenceScore` e porque é mais útil do que regras genéricas
+- Cache como padrão `@Cacheable` do Spring — mas feita à mão em SQLite para persistir entre execuções e controlar o TTL
+- Trade-off *fail-open* vs *fail-closed*: score 0 quando a API falha pode mascarar ataques reais
+- Mocking com `unittest.mock.patch.object` para testar chamadas HTTP sem rede
+- Implicações RGPD: só consultar IPs externos, nunca IPs das zonas internas
+
+**Exercício de reflexão:** hoje, quando a API falha, `check_ip` devolve score `0` — o mesmo valor de um IP limpo. Que problema cria isto num alerta? Como mudarias o tipo de retorno para distinguir "score 0" de "desconhecido"? (Dica: `int | None`, como já fazes em `LogEntry.abuse_score`.)
 
 **Próximo dia:** Dia 13 — GeoIP com MaxMind GeoLite2 — enriquecer IPs com país e cidade

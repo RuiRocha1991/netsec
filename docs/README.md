@@ -7,14 +7,14 @@
 
 ## Estado actual
 
-**Fase 1 · Semana 2 · Dia 10 — próximo**
+**Fase 1 · Semana 2 · Dia 12 — em curso**
 
 | Item | Valor |
 |---|---|
 | VM Ubuntu | `192.168.0.43` · alias `netsec-vm` |
 | Projecto | `~/projects/netsec` |
 | Activar venv | `source .venv/bin/activate` |
-| Testes | `python -m pytest tests/ -v` → 79 passed |
+| Testes | `python -m pytest tests/ -v` → 92 passed |
 
 ---
 

@@ -11,7 +11,7 @@ dev = [
     "pytest",
     "pytest-asyncio",
 ]
-analysis = ["pandas", "pyyaml"]
+analysis = ["pandas", "pyyaml", "requests", "python-dotenv"]
 capture = ["pyshark"]
 
 [tool.ruff]
