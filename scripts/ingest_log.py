@@ -1,18 +1,16 @@
 from __future__ import annotations
 
+import dataclasses
 import sys
 from pathlib import Path
-import dataclasses
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.db.storage import EventStorage  # noqa: E402
-from src.parsers.pfsense_parser import parse_file  # noqa: E402
-
 from src.analyzers.threat_intel import ThreatIntel  # noqa: E402
+from src.db.storage import EventStorage  # noqa: E402
 from src.models.log_entry import LogEntry  # noqa: E402
 from src.models.network_utils import NetworkZone  # noqa: E402
-
+from src.parsers.pfsense_parser import parse_file  # noqa: E402
 
 
 def ingest(log_path: Path, db_path: Path) -> None:

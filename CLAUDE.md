@@ -168,7 +168,8 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 │   │   └── python_core.py     ← exemplos de Python core (aprendizagem)
 │   ├── parsers/
 │   │   └── pfsense_parser.py  ← parse_line(), parse_file() — filterlog IPv4 + IPv6
-│   ├── analyzers/             ← vazio (Semana 2+)
+│   ├── analyzers/
+│   │   └── threat_intel.py    ← ThreatIntel: AbuseIPDB + cache SQLite (TTL 24h)
 │   ├── alerts/                ← vazio (Semana 3+)
 │   └── db/
 │       └── storage.py         ← EventStorage (SQLite): insert_many(), stats(), top_blocked_ips()
@@ -176,7 +177,8 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 │   ├── test_network_utils.py  ← 29 testes
 │   ├── test_log_entry.py      ← 17 testes
 │   ├── test_pfsense_parser.py ← 23 testes
-│   └── test_storage.py        ← 7 testes
+│   ├── test_storage.py        ← 7 testes
+│   └── test_threat_intel.py   ← 5 testes (mocks AbuseIPDB)
 ├── scripts/
 │   ├── analyze_pcap.py        ← análise .pcap com pyshark
 │   ├── generate_test_log.py   ← gera log pfSense sintético
@@ -211,11 +213,12 @@ Cliente C (pfSense) ──syslog TLS──►     ├── Agente Python + ML
 | Dia 9 | Servidor syslog UDP com threading | ✅ |
 | Dia 10 | Queries SQLite avançadas + Pandas | ✅ |
 | Dia 11 | Motor de regras YAML configurável | ✅ |
-| Dia 12 | AbuseIPDB — threat intelligence | 🔄 em curso |
+| Dia 12 | AbuseIPDB — threat intelligence | ✅ |
+| Dia 13 | GeoIP com MaxMind GeoLite2 | 🔄 em curso |
 
-**Packages instalados:** `pip install -e ".[dev,analysis,capture]"` — dev: `ruff mypy pytest pytest-asyncio` · analysis: `pandas pyyaml` · capture: `pyshark`
+**Packages instalados:** `pip install -e ".[dev,analysis,capture]"` — dev: `ruff mypy pytest pytest-asyncio` · analysis: `pandas pyyaml requests python-dotenv` · capture: `pyshark`
 
-**Testes:** 92 testes, todos a passar (`python -m pytest tests/ -v`)
+**Testes:** 97 testes, todos a passar (`python -m pytest tests/ -v`)
 
 ---
 

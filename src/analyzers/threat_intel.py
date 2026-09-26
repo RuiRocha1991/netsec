@@ -54,10 +54,10 @@ class ThreatIntel:
 
     def _get_cached(self, ip: str) -> sqlite3.Row | None:
         with self._cache_conn() as conn:
-            row = conn.execute(
+            row: sqlite3.Row | None = conn.execute(
                 "SELECT * FROM ip_cache WHERE ip = ?", (ip,)
             ).fetchone()
-        if row and (time.time() - row["queried_at"]) < _TTL_SECS:
+        if row is not None and (time.time() - row["queried_at"]) < _TTL_SECS:
             return row
         return None
 

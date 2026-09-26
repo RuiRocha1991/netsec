@@ -1,6 +1,6 @@
 # Dia 12 — AbuseIPDB — threat intelligence
 
-**Fase:** 1 · **Semana:** 2 · **Estado:** 🔄 Em curso
+**Fase:** 1 · **Semana:** 2 · **Estado:** ✅ Concluído
 
 ---
 
@@ -138,7 +138,7 @@ class ThreatIntel:
         api_key: str | None = None,
         cache_path: Path = _CACHE_DB,
     ) -> None:
-        self.api_key = api_key or os.getenv("ABUSEIPDB_API_KEY", "")
+        self.api_key = api_key if api_key is not None else os.getenv("ABUSEIPDB_API_KEY", "")
         self.cache_path = cache_path
         self.session = requests.Session()
         self.session.headers["Key"] = self.api_key
@@ -166,10 +166,10 @@ class ThreatIntel:
 
     def _get_cached(self, ip: str) -> sqlite3.Row | None:
         with self._cache_conn() as conn:
-            row = conn.execute(
+            row: sqlite3.Row | None = conn.execute(
                 "SELECT * FROM ip_cache WHERE ip = ?", (ip,)
             ).fetchone()
-        if row and (time.time() - row["queried_at"]) < _TTL_SECS:
+        if row is not None and (time.time() - row["queried_at"]) < _TTL_SECS:
             return row
         return None
 
@@ -359,32 +359,39 @@ Os operadores telecom vendem listas de bloqueio genéricas iguais para todos os 
 
 ## Checklist
 
-- [ ] `requests` e `python-dotenv` instalados
-- [ ] `.env` criado com `ABUSEIPDB_API_KEY` (não vai para git)
-- [ ] `ThreatIntel` implementado com cache SQLite (TTL 24h)
-- [ ] 5 testes com mocks a passar (sem consumir quota da API real)
-- [ ] `python -m pytest tests/ -v` → 97 passed
-- [ ] `ruff check src/` sem erros
+- [x] `requests` e `python-dotenv` instalados
+- [x] `.env` criado com `ABUSEIPDB_API_KEY` (não vai para git)
+- [x] `ThreatIntel` implementado com cache SQLite (TTL 24h)
+- [x] 5 testes com mocks a passar (sem consumir quota da API real)
+- [x] `python -m pytest tests/ -v` → 97 passed
+- [x] `ruff check src/` sem erros
 - [ ] (Opcional) Testado com API real — IP conhecido retorna score > 0
-- [ ] Consegues explicar por palavras tuas porque é que a cache existe e o que acontece quando a API falha?
-- [ ] Git commit realizado
+- [x] Consegues explicar por palavras tuas porque é que a cache existe e o que acontece quando a API falha?
+- [x] Git commit realizado
 
 ---
 
 ## Resumo — alterações feitas
 
-*(preencher após conclusão)*
-
-**Ficheiros criados:**
+**Ficheiros criados/alterados:**
 
 | Ficheiro | Descrição |
 |---|---|
-| `src/analyzers/threat_intel.py` | ThreatIntel — AbuseIPDB + cache SQLite |
-| `tests/test_threat_intel.py` | 5 testes com mocks |
+| `src/analyzers/threat_intel.py` | `ThreatIntel` — AbuseIPDB com cache SQLite (TTL 24h) |
+| `tests/test_threat_intel.py` | 5 testes com mocks (sem consumir quota real) |
+| `scripts/ingest_log.py` | Pipeline enriquece IPs externos antes de inserir no SQLite |
+| `.env.example` | Template com `ABUSEIPDB_API_KEY` |
 
-**Packages:** `requests`, `python-dotenv`
+**Packages adicionados:** `requests`, `python-dotenv`
 
-**O que aprendeste:** *(preencher após conclusão)*
+**Testes:** 92 → **97 testes** (5 novos), todos a passar.
+
+**O que aprendeste:**
+- Threat intelligence: o que é um `abuseConfidenceScore` e porque é mais útil do que regras genéricas
+- Cache como padrão `@Cacheable` do Spring — mas feita à mão em SQLite para persistir entre execuções e controlar o TTL
+- Trade-off *fail-open* vs *fail-closed*: score 0 quando a API falha pode mascarar ataques reais
+- Mocking com `unittest.mock.patch.object` para testar chamadas HTTP sem rede
+- Implicações RGPD: só consultar IPs externos, nunca IPs das zonas internas
 
 **Exercício de reflexão:** hoje, quando a API falha, `check_ip` devolve score `0` — o mesmo valor de um IP limpo. Que problema cria isto num alerta? Como mudarias o tipo de retorno para distinguir "score 0" de "desconhecido"? (Dica: `int | None`, como já fazes em `LogEntry.abuse_score`.)
 
