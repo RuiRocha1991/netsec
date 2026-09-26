@@ -43,6 +43,9 @@ class LogEntry:
     # ── Campo opcional — preenchido por enriquecimento externo ───────
     geo_country: str | None = field(default=None)
     abuse_score: int | None = field(default=None)   # 0–100 AbuseIPDB
+    geo_city: str | None = None
+    geo_asn:  str | None = None
+
 
     def __post_init__(self) -> None:
         """Calcula os campos derivados após a criação do objecto."""

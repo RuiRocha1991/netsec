@@ -9,6 +9,8 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
+from src.analyzers.geo_lookup import GeoLookup
+
 load_dotenv()
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,7 @@ class ThreatIntel:
         self.session.headers["Key"] = self.api_key
         self.session.headers["Accept"] = "application/json"
         self._init_cache()
+        self.geo = GeoLookup()
 
     # ── Cache ──────────────────────────────────────────────────────────────
 
@@ -100,4 +103,10 @@ class ThreatIntel:
     def enrich(self, ip: str) -> dict[str, int | str | None]:
         """Devolve dict com abuse_score e geo_country para um IP."""
         score, country = self.check_ip(ip)
-        return {"abuse_score": score, "geo_country": country}
+        geo = self.geo.lookup(ip)
+        return {
+            "abuse_score": score,
+            "geo_country": country or geo["geo_country"],
+            "geo_city":    geo["geo_city"],
+            "geo_asn":     geo["geo_asn"],
+        }

@@ -19,14 +19,13 @@ def ingest(log_path: Path, db_path: Path) -> None:
     entries = parse_file(str(log_path))
     print(f"  {len(entries)} linhas válidas encontradas")
 
-    print("A enriquecer IPs externos com AbuseIPDB...")
+    print("A enriquecer IPs externos com AbuseIPDB + GeoLite2...")
     enriched = 0
     result: list[LogEntry] = []
     for entry in entries:
         if entry.src_zone == NetworkZone.EXTERNAL:
-            score, country = intel.check_ip(entry.src_ip)
-            # LogEntry é dataclass — replace() cria cópia com campos alterados
-            entry = dataclasses.replace(entry, abuse_score=score, geo_country=country)
+            enriched_data = intel.enrich(entry.src_ip)
+            entry = dataclasses.replace(entry, **enriched_data)
             enriched += 1
         result.append(entry)
     entries = result
